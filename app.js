@@ -11,6 +11,7 @@ const app = Vue.createApp({
       playerHealth: 100,
       currentRound: 0,
       winner: null,
+      logMessages: [],
     };
   },
   
@@ -47,6 +48,7 @@ const app = Vue.createApp({
       this.playerHealth = 100;
       this.currentRound = 0;
       this.winner = null;
+      this.logMessages = [];
     },
 
     attackMonster() {
@@ -54,12 +56,15 @@ const app = Vue.createApp({
 
       const attackValue =  getRandomValue(5, 12);
       this.monsterHealth -= attackValue;
+
+      this.addLogMessages('player', 'attack', attackValue);
       this.attackPlayer();
     },
 
     attackPlayer() {
       const attackValue = getRandomValue(8, 15);
       this.playerHealth -= attackValue;
+      this.addLogMessages('monster', 'attack', attackValue);
     },
 
     specialAttackMonster() {
@@ -67,6 +72,7 @@ const app = Vue.createApp({
   
       const attackValue = getRandomValue(12, 25);
       this.monsterHealth -= attackValue;
+      this.addLogMessages('player', 'special-attack', attackValue);
       this.attackPlayer();
     },
 
@@ -77,11 +83,20 @@ const app = Vue.createApp({
       } else {
         this.playerHealth += healValue;
       }
+      this.addLogMessages('player', 'heal', attackValue);
       this.attackPlayer();
     },
 
     surrender() {
       this.winner = 'monster';
+    },
+
+    addLogMessages(who, what, value) {
+      this.logMessages.unshift({
+        actionBy: who,
+        actionType: what,
+        actionValue: value
+      });
     }
   },
 
